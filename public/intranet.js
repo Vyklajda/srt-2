@@ -66,7 +66,6 @@ async function roster() {
     $('#rc').textContent = rows.length + ' / ' + d.length;
   };
   ['#rs', '#rd', '#rr'].forEach(s => $(s).oninput = draw); draw();
-}
-      .map(c => `<tr><td><b>${esc(c.c)}</b></td><td>${esc(c.m)}</td></tr>`).join('') || '<tr><td colspan="2">Nic nenalezeno</td></tr>'; };
+}d><td>${esc(c.m)}</td></tr>`).join('') || '<tr><td colspan="2">Nic nenalezeno</td></tr>'; };
   $('#cs').oninput = draw; draw();
 }
