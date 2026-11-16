@@ -51,26 +51,22 @@ async function forms() {
 }
 
 async function roster() {
-  const d = await J('/api/data/roster');
-  const opt = k => [...new Set(d.map(x => x[k]))].sort().map(v => `<option>${esc(v)}</option>`).join('');
-  $('#rd').innerHTML = '<option value="">Všechny divize</option>' + opt('division');
-  $('#rr').innerHTML = '<option value="">Všechny hodnosti</option>' + opt('rank');
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbyoCdfJRUvokQA-Sr9v1PM_jgLHM9Z3w952xt3wG6QAzxrodfiMJ9sekz1hOahNuAMxVQ/exec";
+  const res = await fetch(SHEET_URL);
+  const d = await res.json();
+
+  const opt = k => [...new Set(d.map(x => x[k]).filter(Boolean))].sort().map(v => `<option>${esc(v)}</option>`).join('');
+  $('#rd').innerHTML = '<option value="">Všechny divize</option>' + opt('divize');
+  $('#rr').innerHTML = '<option value="">Všechny hodnosti</option>' + opt('hodnost');
   const draw = () => {
     const s = $('#rs').value.toLowerCase().trim(), dv = $('#rd').value, rk = $('#rr').value;
-    const rows = d.filter(x => (!dv || x.division === dv) && (!rk || x.rank === rk) && (!s || (x.name + ' ' + x.badge).toLowerCase().includes(s)));
-    $('#rt').innerHTML = rows.map(x => `<tr><td>${esc(x.badge)}</td><td>${esc(x.name)}</td><td>${esc(x.rank)}</td><td>${esc(x.division)}</td>
-      <td><span class="st ${x.status === 'Aktivní' ? 'ok' : 'off'}">${esc(x.status)}</span></td></tr>`).join('') || '<tr><td colspan="5">Nic nenalezeno</td></tr>';
-    $('#rc').textContent = rows.length + ' / ' + d.length; };
+    const rows = d.filter(x => (!dv || x.divize === dv) && (!rk || x.hodnost === rk) && (!s || (String(x.jmeno || '') + ' ' + String(x.odznak || '')).toLowerCase().includes(s)));
+    $('#rt').innerHTML = rows.map(x => `<tr><td>${esc(x.odznak)}</td><td>${esc(x.jmeno)}</td><td>${esc(x.hodnost)}</td><td>${esc(x.divize)}</td>
+      <td><span class="st ${x.stav === 'Aktivní' ? 'ok' : 'off'}">${esc(x.stav)}</span></td></tr>`).join('') || '<tr><td colspan="5">Nic nenalezeno</td></tr>';
+    $('#rc').textContent = rows.length + ' / ' + d.length;
+  };
   ['#rs', '#rd', '#rr'].forEach(s => $(s).oninput = draw); draw();
 }
-
-async function academy() {
-  const d = await J('/api/data/academy'), safe = u => /^(https:\/\/|\/)/.test(u) ? u : '#';
-  $('#ah').innerHTML = d.handbooks.map(h => `<a class="card" href="${esc(safe(h.url))}" target="_blank" rel="noopener"><b>${esc(h.t)}</b><span>${esc(h.d)}</span></a>`).join('');
-  const det = a => a.map(i => `<details><summary>${esc(i.t)}</summary><p>${esc(i.x)}</p></details>`).join('');
-  $('#ai').innerHTML = det(d.investigation); $('#at').innerHTML = det(d.tactics);
-  const draw = () => { const v = $('#cs').value.toLowerCase().trim();
-    $('#ct').innerHTML = d.codes.filter(c => !v || (c.c + ' ' + c.m).toLowerCase().includes(v))
       .map(c => `<tr><td><b>${esc(c.c)}</b></td><td>${esc(c.m)}</td></tr>`).join('') || '<tr><td colspan="2">Nic nenalezeno</td></tr>'; };
   $('#cs').oninput = draw; draw();
 }
