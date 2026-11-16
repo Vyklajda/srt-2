@@ -66,5 +66,17 @@ async function roster() {
     $('#rc').textContent = rows.length + ' / ' + d.length;
   };
   ['#rs', '#rd', '#rr'].forEach(s => $(s).oninput = draw); draw();
+}
+
+async function academy() {
+  const d = await J('/api/data/academy'), safe = u => /^https?:\/\//.test(u) ? u : '#';
+  $('#ah').innerHTML = d.handbooks.map(h => `<a class="card" href="${esc(safe(h.url))}" target="_blank" rel="noopener"><b>${esc(h.t)}</b><span>${esc(h.d)}</span></a>`).join('');
+  const det = a => a.map(i => `<details><summary>${esc(i.t)}</summary><p>${esc(i.x)}</p></details>`).join('');
+  $('#ai').innerHTML = det(d.investigation); $('#at').innerHTML = det(d.tactics);
+  const draw = () => {
+    const v = $('#cs').value.toLowerCase().trim();
+    $('#ct').innerHTML = d.codes.filter(c => !v || (c.c + ' ' + c.m).toLowerCase().includes(v))
+      .map(c => `<tr><td><b>${esc(c.c)}</b></td><td>${esc(c.m)}</td></tr>`).join('') || '<tr><td colspan="2">Nic nenalezeno</td></tr>';
+  };
   $('#cs').oninput = draw; draw();
 }
