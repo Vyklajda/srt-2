@@ -1,4 +1,5 @@
 require('dotenv').config();
+app.set('trust proxy', 1);
 const express = require('express'), session = require('express-session'), helmet = require('helmet');
 const crypto = require('crypto'), fs = require('fs/promises'), path = require('path');
 
