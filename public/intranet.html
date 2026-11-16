@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intranet – S.R.T. LSSD</title><link rel="stylesheet" href="intranet.css"></head>
+<body>
+<header class="top"><a class="brand" href="/">S.R.T. <small>INTRANET</small></a>
+<div id="auth"><a class="btn sm" href="/auth/login">Přihlásit přes Discord</a></div></header>
+
+<main id="gate" class="gate"><h1>Pro zaměstnance</h1>
+<p>Interní systém LSSD. Přístup mají jen členové SRT Discordu.</p>
+<div id="msg" class="bad box" hidden></div>
+<a class="btn" href="/auth/login">Přihlásit přes Discord</a></main>
+
+<main id="app" hidden>
+<nav class="tabs" id="tabs">
+<button class="on" data-t="docs">Předpisy</button><button data-t="forms">Formuláře</button>
+<button data-t="roster">Roster</button><button data-t="acad">Akademie</button></nav>
+
+<section id="docs" class="panel"><input id="dq" placeholder="Hledat paragraf nebo pravidlo…"><div id="dl"></div></section>
+
+<section id="forms" class="panel" hidden><div id="fsel" class="chips"></div>
+<form id="fform" class="box"></form><p id="fres"></p></section>
+
+<section id="roster" class="panel" hidden>
+<div class="bar"><input id="rs" placeholder="Jméno nebo odznak…"><select id="rd"></select><select id="rr"></select><span id="rc" class="mut"></span></div>
+<div class="scroll"><table><thead><tr><th>Odznak</th><th>Jméno</th><th>Hodnost</th><th>Divize</th><th>Stav</th></tr></thead><tbody id="rt"></tbody></table></div></section>
+
+<section id="acad" class="panel" hidden>
+<h3>Příručky</h3><div id="ah" class="cards"></div>
+<h3>Postupy při vyšetřování</h3><div id="ai"></div>
+<h3>Taktické postupy</h3><div id="at"></div>
+<h3>Rádiové kódy (10-kódy)</h3><input id="cs" placeholder="Hledat kód…">
+<div class="scroll"><table><thead><tr><th>Kód</th><th>Význam</th></tr></thead><tbody id="ct"></tbody></table></div></section>
+</main>
+<script src="intranet.js"></script>
+</body></html>

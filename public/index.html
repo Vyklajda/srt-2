@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S.R.T. – LSSD</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@500;700&display=swap">
+<style>
+:root{--bg:#0a0c09;--bg2:#10130e;--card:rgba(255,255,255,.04);--tx:#eceee6;--mut:#9aa28e;--ac:#d4b04a;--ac2:#f0d27a;--hd:#0a0c09;--hdt:#eceee6;--bd:rgba(255,255,255,.1);--ok:#7fd48a;--bad:#ff8b8b;--sh:0 10px 40px rgba(0,0,0,.35);
+--hf:"Oswald","Arial Narrow",Impact,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f5f4ee;--bg2:#ebe9df;--card:#fff;--tx:#181b14;--mut:#5b6250;--ac:#8a6a12;--ac2:#b8901f;--hd:#f5f4ee;--hdt:#181b14;--bd:rgba(0,0,0,.1);--ok:#2f6b2f;--bad:#a12b2b;--sh:0 10px 30px rgba(0,0,0,.08)}}
+:root[data-theme="light"]{--bg:#f5f4ee;--bg2:#ebe9df;--card:#fff;--tx:#181b14;--mut:#5b6250;--ac:#8a6a12;--ac2:#b8901f;--hd:#f5f4ee;--hdt:#181b14;--bd:rgba(0,0,0,.1);--ok:#2f6b2f;--bad:#a12b2b;--sh:0 10px 30px rgba(0,0,0,.08)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hd);z-index:10}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--hd) 80%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;gap:2px;align-items:center;padding:0 16px;overflow-x:auto;border-bottom:1px solid var(--bd)}
+nav b{font-family:var(--hf);font-size:20px;color:var(--ac);letter-spacing:.18em;margin-right:auto;padding:16px 8px;white-space:nowrap}
+nav a{color:var(--hdt);opacity:.75;text-decoration:none;padding:8px 14px;margin:8px 0;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;border-radius:99px;transition:.2s}
+nav a:hover{opacity:1;background:var(--card);color:var(--ac)}
+.hero{position:relative;overflow:hidden;color:#eceee6;text-align:center;padding:110px 20px 120px;background:radial-gradient(60% 55% at 50% 0,rgba(212,176,74,.28),transparent 70%),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/48px 48px,#0a0c09}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:90px;background:linear-gradient(transparent,var(--bg))}
+.hero>*{position:relative;z-index:1}
+.hero svg{width:104px;height:104px;filter:drop-shadow(0 0 24px rgba(212,176,74,.5))}
+.chip{display:inline-block;margin:18px 0 6px;padding:6px 16px;border:1px solid rgba(212,176,74,.4);border-radius:99px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#f0d27a;background:rgba(212,176,74,.08)}
+.hero h1{font-family:var(--hf);margin:0 0 8px;font-size:clamp(64px,18vw,150px);line-height:1;letter-spacing:.1em;background:linear-gradient(180deg,#fff2c4,#d4b04a 60%,#8a6a12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:540px;margin:0 auto 32px;color:#c3c9b6;font-size:18px}
+.btn{display:inline-block;background:linear-gradient(135deg,#f0d27a,#d4b04a);color:#15170f;padding:14px 30px;border-radius:99px;font:inherit;font-weight:700;text-decoration:none;border:0;cursor:pointer;text-transform:uppercase;letter-spacing:.08em;font-size:14px;box-shadow:0 6px 24px rgba(212,176,74,.3);transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(212,176,74,.45)}
+.btn.s{background:transparent;color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+.btn.s:hover{border-color:var(--ac);color:var(--ac)}
+section.w{max-width:1000px;margin:0 auto;padding:72px 20px}
+h2{font-family:var(--hf);font-size:clamp(30px,6vw,46px);margin:0 0 28px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+h2::before{content:"";display:block;width:44px;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--ac2),var(--ac));margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:22px;backdrop-filter:blur(6px);transition:.25s}
+.grid .card:hover{transform:translateY(-4px);border-color:var(--ac);box-shadow:var(--sh)}
+.card h3{margin:0 0 6px;color:var(--ac);font-family:var(--hf);font-size:20px;letter-spacing:.05em;text-transform:uppercase}
+.card p{margin:0;color:var(--mut)}
+.num{font-family:var(--hf);font-size:46px;font-weight:700;line-height:1.1;background:linear-gradient(180deg,var(--ac2),var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.ph{aspect-ratio:4/3;border-radius:18px;border:1px dashed var(--bd);background:linear-gradient(135deg,var(--card),transparent);display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:14px;text-align:center;padding:10px;transition:.25s}
+.ph:hover{transform:scale(1.03);border-color:var(--ac)}
+ol.st{counter-reset:s;list-style:none;padding:0;margin:0}
+ol.st li{counter-increment:s;padding:10px 0 10px 52px;position:relative;color:var(--mut)}
+ol.st li::before{content:counter(s);position:absolute;left:0;top:8px;width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--ac2),var(--ac));color:#15170f;font-weight:700;display:flex;align-items:center;justify-content:center}
+.form{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:26px;margin-top:20px;box-shadow:var(--sh)}
+.form h3{margin:0 0 6px;color:var(--ac);font-family:var(--hf);font-size:24px;letter-spacing:.05em;text-transform:uppercase}
+label{display:block;font-weight:600;margin:16px 0 6px;font-size:14px}
+input,textarea,select{width:100%;padding:12px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--bg2);color:var(--tx);font:inherit;transition:.2s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--ac);box-shadow:0 0 0 3px rgba(212,176,74,.2)}
+textarea{min-height:84px;resize:vertical}
+.q{margin:16px 0;padding:16px;border:1px solid var(--bd);border-radius:14px;background:var(--bg2)}
+.q p{margin:0 0 6px;font-weight:600}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:10px;font-weight:400;margin:2px 0;cursor:pointer;transition:.15s}
+.opt:hover{background:var(--card)}
+.opt input{width:auto;margin-top:6px;accent-color:#d4b04a}
+#res{display:none}
+#out{white-space:pre-wrap;background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:14px;font-size:14px;overflow-x:auto}
+.pass{color:var(--ok)}.fail{color:var(--bad)}.mut{color:var(--mut)}
+footer{border-top:1px solid var(--bd);color:var(--mut);text-align:center;padding:36px 20px;font-size:14px}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+#navauth{display:flex;align-items:center;gap:4px;margin-left:6px}
+nav .dc{background:linear-gradient(135deg,#f0d27a,#d4b04a);color:#15170f;opacity:1;font-weight:700}
+.nu{display:inline-flex;align-items:center;gap:8px;padding:0 8px;font-size:14px;white-space:nowrap}
+.nu img{width:28px;height:28px;border-radius:50%;border:2px solid var(--ac)}
+</style>
+</head>
+<body>
+<nav><b>S.R.T.</b><a href="#onas">O nás</a><a href="#cinnost">Činnost</a><a href="#foto">Fotky</a><a href="#nabor">Nábor</a><a href="#kontakt">Kontakt</a><a href="/intranet.html">Pro zaměstnance</a><span id="navauth"><a class="dc" href="/auth/login">Přihlásit přes Discord</a></span></nav>
+
+<header class="hero" id="top">
+<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 90 20v28c0 26-17 41-40 48C27 89 10 74 10 48V20z" fill="none" stroke="#d4b04a" stroke-width="4"/><path d="m50 24 7 15h16l-13 10 5 16-15-10-15 10 5-16-13-10h16z" fill="#d4b04a"/></svg>
+<div class="chip">Los Santos Sheriff’s Department</div>
+<h1>S.R.T.</h1>
+<p><b>Special Response Team</b><br>Disciplína. Taktika. Týmová práce.</p>
+<a class="btn" href="#nabor">Chci do týmu</a>
+</header>
+
+<section class="w" id="onas">
+<h2>O nás</h2>
+<p>S.R.T. je elitní taktická jednotka LSSD. Nasazujeme se u rizikových zadržení, výjezdů s rukojmími, ozbrojených barikád a všude tam, kde běžné hlídky nestačí. Stavíme na přípravě, komunikaci a vzájemné důvěře.</p>
+<div class="grid" style="margin-top:22px">
+<div class="card"><div class="num">24/7</div><p>Pohotovost pro kritické zásahy</p></div>
+<div class="card"><div class="num">100 %</div><p>Týmová práce a profesionalita</p></div>
+<div class="card"><div class="num">[X]</div><p>Aktivních členů (doplň)</p></div>
+<div class="card"><div class="num">[X]</div><p>Úspěšných zásahů (doplň)</p></div>
+</div>
+</section>
+
+<section class="w" id="cinnost" style="padding-top:0">
+<h2>Co děláme</h2>
+<div class="grid">
+<div class="card"><h3>Taktické zásahy</h3><p>Vstupy do budov, zadržení vysoce rizikových osob.</p></div>
+<div class="card"><h3>Rukojmí a barikády</h3><p>Plánování, vyjednávání a koordinovaný zásah.</p></div>
+<div class="card"><h3>Eskorty a ochrana</h3><p>Doprovod VIP osob a kritických přesunů.</p></div>
+<div class="card"><h3>Výcvik</h3><p>Pravidelné tréninky střelby, CQB a komunikace.</p></div>
+</div>
+</section>
+
+<section class="w" id="foto" style="padding-top:0">
+<h2>Fotogalerie</h2>
+<div class="gal">
+<div class="ph">Fotka 1<br>(zásah)</div><div class="ph">Fotka 2<br>(výcvik)</div><div class="ph">Fotka 3<br>(tým)</div>
+<div class="ph">Fotka 4<br>(vozidla)</div><div class="ph">Fotka 5<br>(akce)</div><div class="ph">Fotka 6<br>(skupinové foto)</div>
+</div>
+</section>
+
+<section class="w" id="nabor" style="padding-top:0">
+<h2>Nábor</h2>
+<div class="grid">
+<div class="card"><h3>Požadavky</h3><p>Člen LSSD, čistá historie, min. 16 let (OOC), mikrofon, aktivita a ochota učit se.</p></div>
+<div class="card"><h3>Postup</h3>
+<ol class="st"><li>Vyplň formulář a test</li><li>Pošli výsledek velení</li><li>Pohovor a zkušební trénink</li><li>Přijetí do týmu</li></ol></div>
+</div>
+
+<div class="form">
+<h3>Přihláška</h3>
+<label>IC jméno a příjmení *</label><input id="ic">
+<label>Discord (OOC) *</label><input id="dc">
+<label>Věk (OOC) *</label><input id="age" type="number" min="1">
+<label>Hodnost / číslo odznaku *</label><input id="rank">
+<label>Proč chceš do S.R.T.? *</label><textarea id="a1"></textarea>
+<label>Zkušenosti s taktickými jednotkami</label><textarea id="a2"></textarea>
+<label>Kdy můžeš hrát?</label><textarea id="a4"></textarea>
+</div>
+
+<div class="form">
+<h3>Základní test</h3>
+<p class="mut">Úspěch od 75 % (12 z 16). Vyber jednu odpověď u každé otázky.</p>
+<div id="test"></div>
+<button class="btn" id="go">Vyhodnotit</button>
+<p id="err" class="fail"></p>
+</div>
+
+<div class="form" id="res">
+<h3>Výsledek</h3>
+<p id="score"></p>
+<p id="saveinfo" class="mut"></p>
+<div id="out"></div>
+<p><button class="btn s" id="copy">Zkopírovat (záložní)</button> <span id="cm" class="mut"></span></p>
+</div>
+</section>
+
+<section class="w" id="kontakt" style="padding-top:0">
+<h2>Kontakt</h2>
+<div class="grid">
+<div class="card"><h3>Velitel</h3><p>[Jméno velitele]</p></div>
+<div class="card"><h3>Discord</h3><p>[Odkaz nebo tag]</p></div>
+</div>
+</section>
+
+
+
+<footer>© S.R.T. – LSSD · Roleplay projekt, není spojen se skutečnými orgány.</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+[
+ {"cat":"Služební zákony","items":[
+  {"t":"§ 1 Základní povinnosti zaměstnance","x":"UKÁZKA – nahraď vlastním textem. Zaměstnanec je povinen jednat profesionálně, dodržovat řetězec velení a pravidla serveru."},
+  {"t":"§ 2 Odznak a uniforma","x":"UKÁZKA – pravidla nošení uniformy a odznaku ve službě."}]},
+ {"cat":"Trestní a přestupkový řád","items":[
+  {"t":"§ 10 Přestupky v dopravě","x":"UKÁZKA – seznam přestupků a sazeb."},
+  {"t":"§ 20 Trestné činy","x":"UKÁZKA – seznam trestných činů a trestů."}]},
+ {"cat":"SOP – zbraně a donucovací prostředky","items":[
+  {"t":"SOP 1 Použití střelné zbraně","x":"UKÁZKA – smrtící síla jen při bezprostředním ohrožení života. Po každém použití povinné hlášení (Use of Force)."},
+  {"t":"SOP 2 Taser a méně smrtící prostředky","x":"UKÁZKA – kdy a jak použít, eskalace síly."}]}
+]

@@ -1,0 +1,15 @@
+{
+ "handbooks":[
+  {"t":"Příručka pro nováčky","d":"Úvod do služby (nahraď odkazem na PDF)","url":"https://example.com/prirucka.pdf"},
+  {"t":"Příručka S.R.T.","d":"Základy taktické jednotky","url":"https://example.com/srt.pdf"}],
+ "investigation":[
+  {"t":"Zajištění místa činu","x":"UKÁZKA – uzavřít prostor, zapsat příchozí, nic nepřemisťovat, přivolat vyšetřovatele."},
+  {"t":"Výslech podezřelého","x":"UKÁZKA – poučení o právech, záznam, zákaz nátlaku."}],
+ "tactics":[
+  {"t":"Vstup do budovy (stack)","x":"UKÁZKA – přidělení sektorů, komunikace, krytí, jeden hlas velení."},
+  {"t":"Zadržení rukojmích","x":"UKÁZKA – perimetr, vyjednavač, plán záložního zásahu."}],
+ "codes":[
+  {"c":"10-4","m":"Rozumím"},{"c":"10-7","m":"Mimo službu"},{"c":"10-8","m":"Ve službě"},
+  {"c":"10-20","m":"Poloha"},{"c":"10-23","m":"Na místě"},{"c":"10-76","m":"Na cestě"},
+  {"c":"10-78","m":"Potřebuji posilu"},{"c":"10-80","m":"Pronásledování"},{"c":"10-99","m":"Kolega v ohrožení (UKÁZKA – uprav podle serveru)"}]
+}
