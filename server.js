@@ -7,12 +7,27 @@ for (const k of ['DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'REDIRECT_URI', '
   if (!E[k]) { console.error('Chybí proměnná v .env: ' + k); process.exit(1); }
 
 const app = express();
+
+// DŮLEŽITÉ: Musí být zde ihned po vytvoření 'app' kvůli Renderu
 app.set('trust proxy', 1);
 
 app.use(helmet({ contentSecurityPolicy: { directives: { ...helmet.contentSecurityPolicy.getDefaultDirectives(),
   'img-src': ["'self'", 'https://cdn.discordapp.com', 'data:'] } } }));
-app.use(session({ name: 'srt.sid', secret: E.SESSION_SECRET, resave: false, saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', secure: prod, maxAge: 8 * 3600e3 } }));
+
+app.use(session({
+  name: 'srt.sid',
+  secret: E.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  proxy: true, // Klíčové pro správné fungování za proxy na Renderu
+  cookie: { 
+    httpOnly: true, 
+    sameSite: 'lax', 
+    secure: true, // Vynucení zabezpečených cookies pro HTTPS na Renderu
+    maxAge: 8 * 3600e3 
+  }
+}));
+
 app.use(express.json({ limit: '20kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -50,12 +65,7 @@ app.get('/auth/callback', wrap(async (req, res) => {
   if (!uRes.ok) return res.redirect('/?err=denied');
   const user = await uRes.json();
 
-  // Kontrola členství na Discord serveru
-  const mRes = await fetch(`${API}/users/@me/guilds/${E.GUILD_ID}/member`, {
-    headers: { Authorization: `Bearer ${tData.access_token}` }
-  });
-  if (!mRes.ok) return res.redirect('/?err=denied');
-
+  // Uložení uživatele do bezpečné session
   req.session.user = {
     id: user.id,
     name: user.global_name || user.username,
