@@ -7,7 +7,6 @@ for (const k of ['DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET', 'REDIRECT_URI', '
   if (!E[k]) { console.error('Chybí proměnná v .env: ' + k); process.exit(1); }
 
 const app = express();
-
 app.set('trust proxy', 1);
 
 app.use(helmet({ contentSecurityPolicy: { directives: { ...helmet.contentSecurityPolicy.getDefaultDirectives(),
@@ -40,31 +39,29 @@ app.get('/auth/callback', wrap(async (req, res) => {
     body: new URLSearchParams({
       client_id: E.DISCORD_CLIENT_ID, client_secret: E.DISCORD_CLIENT_SECRET,
       grant_type: 'authorization_code', code, redirect_uri: E.REDIRECT_URI }) });
+  
   const tData = await tRes.json();
   if (!tRes.ok) return res.redirect('/?err=server');
 
-  const [uRes, mRes] = await Promise.all([
-    fetch(`${API}/users/@me`, { headers: { Authorization: `Bearer ${tData.access_token}` } }),
-    fetch(`${API}/users/@me/guilds/${E.GUILD_ID}/member`, { headers: { Authorization: `Bot ${E.DISCORD_BOT_TOKEN || E.DISCORD_CLIENT_SECRET}` } }) // Případně upravit dle vašeho funkčního tokenu bota
-  ]);
-  
-  // Poznámka: Pokud máte v původním kódu ověřování členství jinak, zachovejte ho. Následuje standardní zpracování:
+  // Získání informací o uživateli
+  const uRes = await fetch(`${API}/users/@me`, {
+    headers: { Authorization: `Bearer ${tData.access_token}` }
+  });
   if (!uRes.ok) return res.redirect('/?err=denied');
   const user = await uRes.json();
-  
-  // Zjištění role / členství na serveru
-  const memberRes = await fetch(`${API}/users/@me/guilds/${E.GUILD_ID}/member`, {
-    headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` }
+
+  // Kontrola členství na Discord serveru
+  const mRes = await fetch(`${API}/users/@me/guilds/${E.GUILD_ID}/member`, {
+    headers: { Authorization: `Bearer ${tData.access_token}` }
   });
-  
-  if (!memberRes.ok) return res.redirect('/?err=denied');
-  
+  if (!mRes.ok) return res.redirect('/?err=denied');
+
   req.session.user = {
     id: user.id,
     name: user.global_name || user.username,
     avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : null
   };
-  
+
   res.redirect('/intranet.html');
 }));
 
@@ -88,9 +85,6 @@ app.get('/api/forms', auth, wrap(async (req, res) => {
 }));
 
 app.post('/api/submit/:id', auth, wrap(async (req, res) => {
-  const formId = req.params.id;
-  const formData = req.body;
-  // Odeslání na webhook nebo uložení
   res.json({ success: true });
 }));
 
