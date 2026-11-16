@@ -1,35 +1,159 @@
 <!DOCTYPE html>
-<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Intranet – S.R.T. LSSD</title><link rel="stylesheet" href="intranet.css"></head>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intranet – S.R.T. LSSD</title>
+<link rel="stylesheet" href="intranet.css">
+</head>
 <body>
-<header class="top"><a class="brand" href="/">S.R.T. <small>INTRANET</small></a>
-<div id="auth"><a class="btn sm" href="/auth/login">Přihlásit přes Discord</a></div></header>
+<header class="top">
+  <a class="brand" href="/">S.R.T. <small>INTRANET</small></a>
+  <div id="auth"><a class="btn sm" href="/auth/login">Přihlásit přes Discord</a></div>
+</header>
 
-<main id="gate" class="gate"><h1>Pro zaměstnance</h1>
-<p>Interní systém LSSD. Přístup mají jen členové SRT Discordu.</p>
-<div id="msg" class="bad box" hidden></div>
-<a class="btn" href="/auth/login">Přihlásit přes Discord</a></main>
+<main id="gate" class="gate">
+  <h1>Pro zaměstnance</h1>
+  <p>Interní systém LSSD. Přístup mají jen členové SRT Discordu.</p>
+  <div id="msg" class="bad box" hidden></div>
+  <a class="btn" href="/auth/login">Přihlásit přes Discord</a>
+</main>
 
 <main id="app" hidden>
-<nav class="tabs" id="tabs">
-<button class="on" data-t="docs">Předpisy</button><button data-t="forms">Formuláře</button>
-<button data-t="roster">Roster</button><button data-t="acad">Akademie</button></nav>
+  <nav class="tabs" id="tabs">
+    <button class="on" data-t="docs">Předpisy</button>
+    <button data-t="forms">Formuláře</button>
+    <button data-t="roster">Roster</button>
+    <button data-t="acad">Akademie</button>
+  </nav>
 
-<section id="docs" class="panel"><input id="dq" placeholder="Hledat paragraf nebo pravidlo…"><div id="dl"></div></section>
+  <section id="docs" class="panel">
+    <input id="dq" placeholder="Hledat paragraf nebo pravidlo…">
+    <div id="dl"></div>
+  </section>
 
-<section id="forms" class="panel" hidden><div id="fsel" class="chips"></div>
-<form id="fform" class="box"></form><p id="fres"></p></section>
+  <section id="forms" class="panel" hidden>
+    <div id="fsel" class="chips"></div>
+    <form id="fform" class="box"></form>
+    <p id="fres"></p>
+  </section>
 
-<section id="roster" class="panel" hidden>
-<div class="bar"><input id="rs" placeholder="Jméno nebo odznak…"><select id="rd"></select><select id="rr"></select><span id="rc" class="mut"></span></div>
-<div class="scroll"><table><thead><tr><th>Odznak</th><th>Jméno</th><th>Hodnost</th><th>Divize</th><th>Stav</th></tr></thead><tbody id="rt"></tbody></table></div></section>
+  <section id="roster" class="panel" hidden>
+    <div class="bar">
+      <input id="rs" placeholder="Jméno nebo odznak…">
+      <select id="rd"><option value="">Všechny divize</option></select>
+      <select id="rr"><option value="">Všechny hodnosti</option></select>
+      <span id="rc" class="mut"></span>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Odznak</th>
+            <th>Jméno</th>
+            <th>Hodnost</th>
+            <th>Divize</th>
+            <th>Stav</th>
+          </tr>
+        </thead>
+        <tbody id="rt">
+          <tr><td colspan="5">Načítám data z tabulky...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-<section id="acad" class="panel" hidden>
-<h3>Příručky</h3><div id="ah" class="cards"></div>
-<h3>Postupy při vyšetřování</h3><div id="ai"></div>
-<h3>Taktické postupy</h3><div id="at"></div>
-<h3>Rádiové kódy (10-kódy)</h3><input id="cs" placeholder="Hledat kód…">
-<div class="scroll"><table><thead><tr><th>Kód</th><th>Význam</th></tr></thead><tbody id="ct"></tbody></table></div></section>
+  <section id="acad" class="panel" hidden>
+    <h3>Příručky</h3>
+    <div id="ah" class="cards"></div>
+    <h3>Postupy při vyšetřování</h3>
+    <div id="ai"></div>
+    <h3>Taktické postupy</h3>
+    <div id="at"></div>
+    <h3>Rádiové kódy (10-kódy)</h3>
+    <input id="cs" placeholder="Hledat kód…">
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th>Kód</th><th>Význam</th></tr>
+        </thead>
+        <tbody id="ct"></tbody>
+      </table>
+    </div>
+  </section>
 </main>
+
+<!-- Integrace Google Tabulky pro Roster -->
+<script>
+  const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyoCdfJRUvokQA-Sr9v1PM_jgLHM9Z3w952xt3wG6QAzxrodfiMJ9sekz1hOahNuAMxVQ/exec";
+  let rosterData = [];
+
+  async function initRoster() {
+    const tbody = document.getElementById("rt");
+    try {
+      const response = await fetch(SHEET_API_URL);
+      rosterData = await response.json();
+      
+      setupFilters(rosterData);
+      renderRoster(rosterData);
+    } catch (error) {
+      console.error("Chyba při načítání dat rosteru:", error);
+      tbody.innerHTML = '<tr><td colspan="5">Nepodařilo se načíst data z Google Tabulky.</td></tr>';
+    }
+  }
+
+  function renderRoster(data) {
+    const tbody = document.getElementById("rt");
+    const searchVal = document.getElementById("rs").value.toLowerCase();
+    const divVal = document.getElementById("rd").value;
+    const rankVal = document.getElementById("rr").value;
+
+    const filtered = data.filter(item => {
+      const matchSearch = 
+        String(item.odznak || "").toLowerCase().includes(searchVal) || 
+        String(item.jmeno || "").toLowerCase().includes(searchVal);
+      const matchDiv = !divVal || item.divize === divVal;
+      const matchRank = !rankVal || item.hodnost === rankVal;
+      return matchSearch && matchDiv && matchRank;
+    });
+
+    document.getElementById("rc").innerText = `${filtered.length} / ${data.length}`;
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5">Žádné záznamy nenalezeny.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(item => `
+      <tr>
+        <td>${item.odznak || ""}</td>
+        <td>${item.jmeno || ""}</td>
+        <td>${item.hodnost || ""}</td>
+        <td>${item.divize || ""}</td>
+        <td><span class="status ${item.stav === 'Aktivní' ? 'aktivni' : 'dovolena'}">${item.stav || ""}</span></td>
+      </tr>
+    `).join("");
+  }
+
+  function setupFilters(data) {
+    const divSelect = document.getElementById("rd");
+    const rankSelect = document.getElementById("rr");
+
+    const divisions = [...new Set(data.map(i => i.divize).filter(Boolean))];
+    const ranks = [...new Set(data.map(i => i.hodnost).filter(Boolean))];
+
+    divSelect.innerHTML = '<option value="">Všechny divize</option>' + divisions.map(d => `<option value="${d}">${d}</option>`).join("");
+    rankSelect.innerHTML = '<option value="">Všechny hodnosti</option>' + ranks.map(r => `<option value="${r}">${r}</option>`).join("");
+
+    document.getElementById("rs").addEventListener("input", () => renderRoster(rosterData));
+    divSelect.addEventListener("change", () => renderRoster(rosterData));
+    rankSelect.addEventListener("change", () => renderRoster(rosterData));
+  }
+
+  // Spuštění načtení po načtení stránky
+  document.addEventListener("DOMContentLoaded", initRoster);
+</script>
+
 <script src="intranet.js"></script>
-</body></html>
+</body>
+</html>
